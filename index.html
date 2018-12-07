@@ -160,6 +160,12 @@
         var titleResultArray = [];
         var joobleArray = [];
 
+        var passData = function(data){
+            if (data.businessNameArray.length > 0){
+                console.log(data);
+            }
+        }
+
         // Jooble API
         $(".cmdSubmit").on("click" , function(){
 
@@ -172,6 +178,8 @@
             // WARNINGS: radius 0 can severly limit the number of results and location must be entered as a city, then state seperated by a comma, and salary should be entered as yearly salary with no $
             var params = "{ keywords: 'cook', location: '" + city + " , " + state + "' , page: '1', salary: '20000', radius: '0'}"
             var test;
+
+           
             //create xmlHttpRequest object
             var http = new XMLHttpRequest();
             //open connection. true - asynchronous, false - synchronous
@@ -179,12 +187,10 @@
 
             //Send the proper header information
             http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                
             //Callback when the state changes
             http.onreadystatechange = function() {
                 // Any use of the requested object called jooble must be done in this if statement.
                 if(http.readyState == 4 && http.status == 200) {
-                    console.log(JSON.parse(http.responseText));
                     jooble = JSON.parse(http.responseText)
             /* 
             jooble.jobs[i].title for job title
@@ -203,18 +209,22 @@
                         businessNameArray.push(element.company);
                         salaryResultArray.push(element.salary);
                         titleResultArray.push(element.title);
-                        
-
                     });
                     
-
+                    
+                } // put new code that uses stuff from jooble under this line
+                var results = {
+                    businessNameArray,
+                    salaryResultArray,
+                    titleResultArray
                 }
-            }
+                passData(results);
+                
+
+            } // no new code below this line that uses stuff from jooble
+            //Send request to the server
             http.send(params);
         });
-//Send request to the server
-
-
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQHurErpXDh3Y89jvtzzv_O_3tYyoeptI&callback=initMap"
         type="text/javascript"></script>
