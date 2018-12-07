@@ -19,14 +19,30 @@
 
     <style>
         /* Set the size of the div element that contains the map */
+        body {
+            /* background-color: grey; */
+            background-image: url("assets/images/background.jpeg");
+
+        }
         #map {
-            height: 400px;
+            height: 800px;
             /* The height is 400 pixels */
             width: 100%;
             /* The width is the width of the web page */
+            /* overflow: show; */
         }
-        .jumbotron {
+        .container {
+            position: absolute;
+            z-index:99999;
             padding: 1rem 28rem;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .container2 {
+            margin: 0px 100px 0px 100px;
+            -moz-box-shadow:    10px 3px 12px 2px rgb(17, 16, 16);
+            -webkit-box-shadow: 10px 3px 12px 2px rgb(17, 16, 16);
+            box-shadow: 10px 3px 12px 2px rgb(17, 16, 16);
         }
     </style>
 
@@ -34,22 +50,21 @@
 </head>
 
 <body>
+    <div class="container2">
+        <div class="container">
+            <h1 class="display-4">OVA 100 </h1>
+            <div class="control-group">
+                <label class="control-label">INPUT DESIRED CITY BELOW</label>
 
-    <div class="jumbotron">
-        <h1 class="display-4">OVA 100 </h1>
-        <div class="control-group">
-            <label class="control-label">INPUT DESIRED CITY BELOW</label>
 
-            
-            <div class="controls">
-                <input id="address-line1" name="address-line1" type="text" placeholder="Santa Monica, CA" class="form-control input-xlarge">
+                <div class="controls col-md-12 col-sm-12">
+                    <input id="address-line1" name="address-line1" type="text" placeholder="Santa Monica, CA" class="form-control input-xlarge">
 
-                <!-- region input-->
-                <div class="control-group">
+                    <!-- region input-->
+                    <div class="control-group">
                         <label class="control-label">State / Province / Region</label>
                         <div class="controls">
-                            <select id="state" name="state" class="form-control input-xlarge"
-                                required>
+                            <select id="state" name="state" class="form-control input-xlarge" required>
                                 <option value="" selected>Please Select A State</option>
                                 <option value="AL">AL</option>
                                 <option value="AK">AK</option>
@@ -113,22 +128,24 @@
                             <!-- <p class="help-block"></p> -->
                         </div>
                     </div>
+                </div>
             </div>
-        </div>
-        <br>
-        <!-- <hr class="my-2"> -->
-        <!-- <div class="control-group padtop row ">
+            <br>
+            <!-- <hr class="my-2"> -->
+            <!-- <div class="control-group padtop row ">
 
             <div class="controls pull-right"> -->
 
-                <!--submit button--><button type="button" class="cmdSubmit" class="btn btn-primary">Submit</button>
+            <!--submit button--><button type="button" class="cmdSubmit" class="btn btn-primary">Submit</button>
             <!-- </div> -->
-        <!-- </div> -->
-        <!-- <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a> -->
+            <!-- </div> -->
+            <!-- <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a> -->
+        </div>
+
+
+        <div id="map" style="overflow: visible !important;"></div>
+
     </div>
-
-
-    <div id="map"></div>
 
 
 
@@ -153,6 +170,94 @@
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQHurErpXDh3Y89jvtzzv_O_3tYyoeptI&callback=initMap"
         type="text/javascript"></script>
+
+    <script>
+        // Initialize and add the map   34.024212, -118.496475
+        function initMap() {
+            // The location of Uluru
+            var uluru = { lat: 34.024212, lng: -118.496475 };
+            // The map, centered at Uluru
+            var map = new google.maps.Map(
+                document.getElementById('map'), { zoom: 4, center: uluru });
+            // The marker, positioned at Uluru
+            var marker = new google.maps.Marker({ position: uluru, map: map });
+        }
+
+        var city;
+        var state;
+        var businessNameArray = [];
+        var salaryInput;
+        var salaryResultArray = [];
+        var titleInput;
+        var titleResultArray = [];
+        var joobleArray = [];
+
+        var passData = function (data) {
+            if (data.businessNameArray.length > 0) {
+                console.log(data);
+            }
+        }
+
+        // Jooble API
+        $(".cmdSubmit").on("click", function () {
+
+            var url = "https://us.jooble.org/api/";
+            var key = "1f9dc219-e82b-4695-a77e-4ee767540739";
+            city = $("#address-line1").val();
+            state = $("#state").val();
+            console.log(city + " " + state);
+            // put search parameters in here, page 1 limits response to 20 items, radius must be set to 0 to get results only for city set in location
+            // WARNINGS: radius 0 can severly limit the number of results and location must be entered as a city, then state seperated by a comma, and salary should be entered as yearly salary with no $
+            var params = "{ keywords: 'cook', location: '" + city + " , " + state + "' , page: '1', salary: '20000', radius: '0'}"
+            var test;
+
+
+            //create xmlHttpRequest object
+            var http = new XMLHttpRequest();
+            //open connection. true - asynchronous, false - synchronous
+            http.open("POST", url + key, true);
+
+            //Send the proper header information
+            http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            //Callback when the state changes
+            http.onreadystatechange = function () {
+                // Any use of the requested object called jooble must be done in this if statement.
+                if (http.readyState == 4 && http.status == 200) {
+                    jooble = JSON.parse(http.responseText)
+                    /* 
+                    jooble.jobs[i].title for job title
+                    jooble.jobs[i].company for company
+                    jooble.jobs[i].location for city and state
+                    jooble.jobs[i].salary for salary, may be displayed as yearly salary or as range of pay per hour, ex. $14.94 - $19.06 per hour
+                    jooble.jobs[i].link for a link for the job listing
+                    jooble.jobs[i].type for whether it is full time, part time, etc.
+                    */
+
+                    businessNameArray = [];
+                    salaryResultArray = [];
+                    titleResultArray = [];
+
+                    jooble.jobs.forEach(element => {
+                        businessNameArray.push(element.company);
+                        salaryResultArray.push(element.salary);
+                        titleResultArray.push(element.title);
+                    });
+
+
+                } // put new code that uses stuff from jooble under this line
+                var results = {
+                    businessNameArray,
+                    salaryResultArray,
+                    titleResultArray
+                }
+                passData(results);
+
+
+            } // no new code below this line that uses stuff from jooble
+            //Send request to the server
+            http.send(params);
+        });
+    </script>
 </body>
 
 </html>
