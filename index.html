@@ -25,6 +25,9 @@
             width: 100%;
             /* The width is the width of the web page */
         }
+        .jumbotron {
+            padding: 1rem 28rem;
+        }
     </style>
 
     <title>Document</title>
@@ -33,12 +36,95 @@
 <body>
 
     <div class="jumbotron">
-        <h1 class="display-4">PROJECT 100K</h1>
-        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
-            featured content or information.</p>
-        <hr class="my-4">
-        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+        <h1 class="display-4">OVA 100 </h1>
+        <div class="control-group">
+            <label class="control-label">INPUT DESIRED CITY BELOW</label>
+
+            
+            <div class="controls">
+                <input id="address-line1" name="address-line1" type="text" placeholder="Santa Monica, CA" class="form-control input-xlarge">
+
+                <!-- region input-->
+                <div class="control-group">
+                        <label class="control-label">State / Province / Region</label>
+                        <div class="controls">
+                            <select id="state" name="state" class="form-control input-xlarge"
+                                required>
+                                <option value="" selected>Please Select A State</option>
+                                <option value="AL">AL</option>
+                                <option value="AK">AK</option>
+                                <option value="AZ">AZ</option>
+                                <option value="AR">AR</option>
+                                <option value="CA">CA</option>
+                                <option value="CO">CO</option>
+                                <option value="CT">CT</option>
+                                <option value="DC">DC</option>
+                                <option value="DE">DE</option>
+                                <option value="FL">FL</option>
+                                <option value="GA">GA</option>
+                                <option value="HI">HI</option>
+                                <option value="ID">ID</option>
+                                <option value="IL">IL</option>
+                                <option value="IN">IN</option>
+                                <option value="IA">IA</option>
+                                <option value="KS">KS</option>
+                                <option value="KY">KY</option>
+                                <option value="LA">LA</option>
+                                <option value="ME">ME</option>
+                                <option value="MD">MD</option>
+                                <option value="MA">MA</option>
+                                <option value="MI">MI</option>
+                                <option value="MN">MN</option>
+                                <option value="MS">MS</option>
+                                <option value="MO">MO</option>
+                                <option value="MT">MT</option>
+                                <option value="NE">NE</option>
+                                <option value="NV">NV</option>
+                                <option value="NH">NH</option>
+                                <option value="NJ">NJ</option>
+                                <option value="NM">NM</option>
+                                <option value="NY">NY</option>
+                                <option value="NC">NC</option>
+                                <option value="ND">ND</option>
+                                <option value="OH">OH</option>
+                                <option value="OK">OK</option>
+                                <option value="OR">OR</option>
+                                <option value="PA">PA</option>
+                                <option value="RI">RI</option>
+                                <option value="SC">SC</option>
+                                <option value="SD">SD</option>
+                                <option value="TN">TN</option>
+                                <option value="TX">TX</option>
+                                <option value="UT">UT</option>
+                                <option value="VT">VT</option>
+                                <option value="VA">VA</option>
+                                <option value="WA">WA</option>
+                                <option value="WV">WV</option>
+                                <option value="WI">WI</option>
+                                <option value="WY">WY</option>
+                                <option value="">-Terr.-</option>
+                                <option value="AS">AS</option>
+                                <option value="FM">FM</option>
+                                <option value="GU">GU</option>
+                                <option value="MI">MI</option>
+                                <option value="PR">PR</option>
+                                <option value="VI">VI</option>
+                            </select>
+                            <!-- <p class="help-block"></p> -->
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <br>
+        <!-- <hr class="my-2"> -->
+        <!-- <div class="control-group padtop row ">
+
+            <div class="controls pull-right"> -->
+
+                <!--submit button--><button type="button" class="cmdSubmit" class="btn btn-primary">Submit</button>
+            <!-- </div> -->
+        <!-- </div> -->
+        <!-- <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a> -->
     </div>
 
 
@@ -54,10 +140,10 @@
 
 
     <script>
-        // Initialize and add the map
+        // Initialize and add the map   34.024212, -118.496475
         function initMap() {
             // The location of Uluru
-            var uluru = { lat: -25.344, lng: 131.036 };
+            var uluru = { lat: 34.024212, lng: -118.496475 };
             // The map, centered at Uluru
             var map = new google.maps.Map(
                 document.getElementById('map'), { zoom: 4, center: uluru });
