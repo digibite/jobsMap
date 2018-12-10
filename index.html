@@ -156,33 +156,39 @@
         nonce="JLtUHyQ5+GVtOomnu/LXEw==" async=""></script> -->
 
 
-    <script>
-        // Initialize and add the map   34.024212, -118.496475
-        function initMap() {
-            // The location of Uluru
-            var uluru = { lat: 34.024212, lng: -118.496475 };
-            // The map, centered at Uluru
-            var map = new google.maps.Map(
-                document.getElementById('map'), { zoom: 4, center: uluru });
-            // The marker, positioned at Uluru
-            var marker = new google.maps.Marker({ position: uluru, map: map });
-        }
-    </script>
+
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQHurErpXDh3Y89jvtzzv_O_3tYyoeptI&callback=initMap"
         type="text/javascript"></script>
 
     <script>
         // Initialize and add the map   34.024212, -118.496475
+        var uluru = { lat: 34.024212, lng: -118.496475 };
+        var uluru2 = { lat: 34.0522222, lng: -118.2427778 };
         function initMap() {
-            // The location of Uluru
-            var uluru = { lat: 34.024212, lng: -118.496475 };
-            // The map, centered at Uluru
-            var map = new google.maps.Map(
-                document.getElementById('map'), { zoom: 4, center: uluru });
-            // The marker, positioned at Uluru
-            var marker = new google.maps.Marker({ position: uluru, map: map });
-        }
+        // The location of Uluru
 
+        // The map, centered at Uluru
+        var map = new google.maps.Map(
+            document.getElementById('map'), {
+                zoom: 10,
+                zoomControl: true,
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                    //terrain button is not working
+                    mapTypeIds: ['roadmap', 'terrain']
+                    
+                },
+                streetViewControl: true,
+                rotateControl: true,
+                center: uluru,
+                disableDefaultUI: false,
+            });
+        // The marker, positioned at Uluru
+        //This is the way you can have markers show in the correct place on the map
+        var marker = new google.maps.Marker({ position: uluru, map: map });
+        var marker2 = new google.maps.Marker({ position: uluru2, map: map });
+        }
         var city;
         var state;
         var search;
