@@ -170,7 +170,7 @@
         // The map, centered at Uluru
         var map = new google.maps.Map(
             document.getElementById('map'), {
-                zoom: 10,
+                zoom: 12,
                 zoomControl: true,
                 mapTypeControl: true,
                 mapTypeControlOptions: {
@@ -188,6 +188,30 @@
         //This is the way you can have markers show in the correct place on the map
         var marker = new google.maps.Marker({ position: uluru, map: map });
         var marker2 = new google.maps.Marker({ position: uluru2, map: map });
+        var markers = [];
+        var infoWindows = [];
+
+        $(".cmdSubmit").on("click", function () {
+
+            setTimeout(function(){
+                markers = [];
+                for (var i = 0; i < results.hasLocation.length; i++) {
+                    if (results.hasLocation[i] === true) {
+                        var myLatLong = {lat: results.lat[i], lng : results.long[i]};
+                        markers.push(new google.maps.Marker({ position: myLatLong, map: map , title: results.businessNameArray[i]}));
+                        infoWindows.push(new google.maps.InfoWindow({content: results.salaryResultArray[i] + " " + results.titleResultArray[i]}));
+                        markers[i].addListener("click", function() {
+                            console.log(this);
+                            infoWindows[i].open(map, this);
+                        });
+                    }
+                }
+                console.log(markers);
+                console.log(infoWindows);
+            }, 20000);
+
+        });
+
         }
         var city;
         var state;
@@ -202,6 +226,9 @@
         var long = [];
         var placeName;
         var fullSearchName;
+        var hasLocation = [];
+        var results = {};
+        
 
         var passData = function (data) {
             if (data.businessNameArray.length > 0) {
@@ -222,20 +249,33 @@
                 method: "GET",
                 url : mapsUrl
             }).then(function(response){
-                // console.log(response);
-                lat.push(response.candidates[0].geometry.location.lat);
-                long.push(response.candidates[0].geometry.location.lng);
+                if (response.status === "OK"){
+                    lat.push(response.candidates[0].geometry.location.lat);
+                    long.push(response.candidates[0].geometry.location.lng);
+                    hasLocation.push(true);
+                    }
+                else {
+                    lat.push(0);
+                    long.push(0);
+                    hasLocation.push(false);
+                    }
 
                 // console.log(lat);
             });
         }
       
 
-        //GoogleSearchAPI("starbucks santa monica ca");
 
 
         // Jooble API
         $(".cmdSubmit").on("click", function () {
+
+            businessNameArray = [];
+            salaryResultArray = [];
+            titleResultArray = [];
+            lat = [];
+            long = [];
+            hasLocation = [];
 
             var url = "https://us.jooble.org/api/";
             var key = "1f9dc219-e82b-4695-a77e-4ee767540739";
@@ -269,34 +309,31 @@
                     jooble.jobs[i].type for whether it is full time, part time, etc.
                     */
 
-                    businessNameArray = [];
-                    salaryResultArray = [];
-                    titleResultArray = [];
+
 
                     jooble.jobs.forEach(element => {
-                        businessNameArray.push(element.company);
-                        salaryResultArray.push(element.salary);
-                        titleResultArray.push(element.title);
+                         if ((element.company !== undefined) && (element.salary !== undefined) && (element.title !== undefined)){   
+                            businessNameArray.push(element.company);
+                            salaryResultArray.push(element.salary);
+                            titleResultArray.push(element.title);
+                         }
                     });
 
 
                 } // put new code that uses stuff from jooble under this line
-                var results = {
+                results = {
                     businessNameArray,
                     salaryResultArray,
                     titleResultArray
                 }
-                passData(results);
-
-                lat = [];
-                long = [];
+                // passData(results);
 
                 results.businessNameArray.forEach(element => {
                     fullSearchName = element + " " + city + " " + state;
                     //console.log(fullSearchName);
 
-                    GoogleSearchAPI(fullSearchName);
-
+                    setTimeout(GoogleSearchAPI(fullSearchName), 3000);
+                    
                 });
 
                 results = {
@@ -304,10 +341,13 @@
                     salaryResultArray,
                     titleResultArray,
                     lat,
-                    long
+                    long,
+                    hasLocation
                 }
 
-                console.log(results);
+                setTimeout(function(){console.log(results);}, 6000);
+
+
 
             } // no new code below this line that uses stuff from jooble
             //Send request to the server
