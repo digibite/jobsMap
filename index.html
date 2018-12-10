@@ -185,18 +185,48 @@
 
         var city;
         var state;
+        var search;
         var businessNameArray = [];
         var salaryInput;
         var salaryResultArray = [];
         var titleInput;
         var titleResultArray = [];
         var joobleArray = [];
+        var lat = [];
+        var long = [];
+        var placeName;
+        var fullSearchName;
 
         var passData = function (data) {
             if (data.businessNameArray.length > 0) {
                 console.log(data);
             }
         }
+
+        // Google Maps Search API function
+        // place name needs to include city and state
+        // this adds the searched locations lat and long to coresponding arrays
+        function GoogleSearchAPI (placeName) {
+
+            placeNameNew = placeName.replace(" ", "%20");
+
+            var mapsUrl = "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/findplacefromtext/json?&key=AIzaSyCQHurErpXDh3Y89jvtzzv_O_3tYyoeptI&fields=formatted_address,name,geometry&inputtype=textquery&input=" + placeNameNew;
+
+            $.ajax({
+                method: "GET",
+                url : mapsUrl
+            }).then(function(response){
+                // console.log(response);
+                lat.push(response.candidates[0].geometry.location.lat);
+                long.push(response.candidates[0].geometry.location.lng);
+
+                // console.log(lat);
+            });
+        }
+      
+
+        //GoogleSearchAPI("starbucks santa monica ca");
+
 
         // Jooble API
         $(".cmdSubmit").on("click", function () {
@@ -208,7 +238,7 @@
             console.log(city + " " + state);
             // put search parameters in here, page 1 limits response to 20 items, radius must be set to 0 to get results only for city set in location
             // WARNINGS: radius 0 can severly limit the number of results and location must be entered as a city, then state seperated by a comma, and salary should be entered as yearly salary with no $
-            var params = "{ keywords: 'cook', location: '" + city + " , " + state + "' , page: '1', salary: '20000', radius: '0'}"
+            var params = "{ keywords: 'front end developer', location: '" + city + " , " + state + "' , page: '1', salary: '20000', radius: '0'}"
             var test;
 
 
@@ -252,6 +282,26 @@
                 }
                 passData(results);
 
+                lat = [];
+                long = [];
+
+                results.businessNameArray.forEach(element => {
+                    fullSearchName = element + " " + city + " " + state;
+                    //console.log(fullSearchName);
+
+                    GoogleSearchAPI(fullSearchName);
+
+                });
+
+                results = {
+                    businessNameArray,
+                    salaryResultArray,
+                    titleResultArray,
+                    lat,
+                    long
+                }
+
+                console.log(results);
 
             } // no new code below this line that uses stuff from jooble
             //Send request to the server
