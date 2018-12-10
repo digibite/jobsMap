@@ -35,9 +35,7 @@
         h1 {
             text-align: center;
         }
-        #city-label {
-            text-align: center;
-        }
+        
         .container {
             position: absolute;
             width: 220px;
@@ -45,6 +43,10 @@
             padding: 0rem 0rem;
             background-color: rgba(255, 255, 255, 0.1);
             right: 40%;
+        }
+        
+        .control-group {
+            text-align: center;
         }
 
         .container2 {
@@ -178,22 +180,16 @@
 
     </div>
 
-
-
-
-
-
-   
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQHurErpXDh3Y89jvtzzv_O_3tYyoeptI&callback=initMap"
         type="text/javascript"></script>
 
-        <script>
-            // Initialize and add the map   34.024212, -118.496475
-            var uluru = { lat: 34.024212, lng: -118.496475 };
-            var uluru2 = { lat: 34.0522222, lng: -118.2427778 };
-            function initMap() {
+    <script>
+        // Initialize and add the map   34.024212, -118.496475
+        var uluru = { lat: 34.024212, lng: -118.496475 };
+        var uluru2 = { lat: 34.0522222, lng: -118.2427778 };
+        function initMap() {
             // The location of Uluru
-    
+
             // The map, centered at Uluru
             var map = new google.maps.Map(
                 document.getElementById('map'), {
@@ -204,7 +200,7 @@
                         style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
                         //terrain button is not working
                         mapTypeIds: ['roadmap', 'terrain']
-                        
+
                     },
                     streetViewControl: true,
                     rotateControl: true,
@@ -216,166 +212,170 @@
             var marker = new google.maps.Marker({ position: uluru, map: map });
             var marker2 = new google.maps.Marker({ position: uluru2, map: map });
             var markers = [];
-    
+            var infoWindows = [];
+
             $(".cmdSubmit").on("click", function () {
-    
-                setTimeout(function(){
+
+                setTimeout(function () {
                     markers = [];
                     for (var i = 0; i < results.hasLocation.length; i++) {
                         if (results.hasLocation[i] === true) {
-                            var myLatLong = {lat: results.lat[i], lng : results.long[i]};
-                            markers.push(new google.maps.Marker({ position: myLatLong, map: map }));
-                            console.log("if is working");
+                            var myLatLong = { lat: results.lat[i], lng: results.long[i] };
+                            markers.push(new google.maps.Marker({ position: myLatLong, map: map, title: results.businessNameArray[i] }));
+                            infoWindows.push(new google.maps.InfoWindow({ content: results.salaryResultArray[i] + " " + results.titleResultArray[i] }));
+                            markers[i].addListener("click", function () {
+                                infoWindows[i].open(map, marker[i]);
+                            });
                         }
-                    console.log("is working");
                     }
                     console.log(markers);
                 }, 7000);
-    
+
             });
-    
+
+        }
+        var city;
+        var state;
+        var search;
+        var businessNameArray = [];
+        var salaryInput;
+        var salaryResultArray = [];
+        var titleInput;
+        var titleResultArray = [];
+        var joobleArray = [];
+        var lat = [];
+        var long = [];
+        var placeName;
+        var fullSearchName;
+        var hasLocation = [];
+        var results = {};
+
+
+        var passData = function (data) {
+            if (data.businessNameArray.length > 0) {
+                console.log(data);
             }
-            var city;
-            var state;
-            var search;
-            var businessNameArray = [];
-            var salaryInput;
-            var salaryResultArray = [];
-            var titleInput;
-            var titleResultArray = [];
-            var joobleArray = [];
-            var lat = [];
-            var long = [];
-            var placeName;
-            var fullSearchName;
-            var hasLocation = [];
-            var results = {};
-            
-    
-            var passData = function (data) {
-                if (data.businessNameArray.length > 0) {
-                    console.log(data);
+        }
+
+        // Google Maps Search API function
+        // place name needs to include city and state
+        // this adds the searched locations lat and long to coresponding arrays
+        function GoogleSearchAPI(placeName) {
+
+            placeNameNew = placeName.replace(" ", "%20");
+
+            var mapsUrl = "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/findplacefromtext/json?&key=AIzaSyCQHurErpXDh3Y89jvtzzv_O_3tYyoeptI&fields=formatted_address,name,geometry&inputtype=textquery&input=" + placeNameNew;
+
+            $.ajax({
+                method: "GET",
+                url: mapsUrl
+            }).then(function (response) {
+                if (response.status === "OK") {
+                    lat.push(response.candidates[0].geometry.location.lat);
+                    long.push(response.candidates[0].geometry.location.lng);
+                    hasLocation.push(true);
                 }
-            }
-    
-            // Google Maps Search API function
-            // place name needs to include city and state
-            // this adds the searched locations lat and long to coresponding arrays
-            function GoogleSearchAPI (placeName) {
-    
-                placeNameNew = placeName.replace(" ", "%20");
-    
-                var mapsUrl = "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/findplacefromtext/json?&key=AIzaSyCQHurErpXDh3Y89jvtzzv_O_3tYyoeptI&fields=formatted_address,name,geometry&inputtype=textquery&input=" + placeNameNew;
-    
-                $.ajax({
-                    method: "GET",
-                    url : mapsUrl
-                }).then(function(response){
-                    if (response.status === "OK"){
-                        lat.push(response.candidates[0].geometry.location.lat);
-                        long.push(response.candidates[0].geometry.location.lng);
-                        hasLocation.push(true);
-                        }
-                    else {
-                        lat.push(0);
-                        long.push(0);
-                        hasLocation.push(false);
-                        }
-    
-                    // console.log(lat);
-                });
-            }
-          
-    
-    
-    
-            // Jooble API
-            $(".cmdSubmit").on("click", function () {
-    
-                businessNameArray = [];
-                salaryResultArray = [];
-                titleResultArray = [];
-                lat = [];
-                long = [];
-                hasLocation = [];
-    
-                var url = "https://us.jooble.org/api/";
-                var key = "1f9dc219-e82b-4695-a77e-4ee767540739";
-                city = $("#address-line1").val();
-                state = $("#state").val();
-                console.log(city + " " + state);
-                // put search parameters in here, page 1 limits response to 20 items, radius must be set to 0 to get results only for city set in location
-                // WARNINGS: radius 0 can severly limit the number of results and location must be entered as a city, then state seperated by a comma, and salary should be entered as yearly salary with no $
-                var params = "{ keywords: 'front end developer', location: '" + city + " , " + state + "' , page: '1', salary: '20000', radius: '0'}"
-                var test;
-    
-    
-                //create xmlHttpRequest object
-                var http = new XMLHttpRequest();
-                //open connection. true - asynchronous, false - synchronous
-                http.open("POST", url + key, true);
-    
-                //Send the proper header information
-                http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                //Callback when the state changes
-                http.onreadystatechange = function () {
-                    // Any use of the requested object called jooble must be done in this if statement.
-                    if (http.readyState == 4 && http.status == 200) {
-                        jooble = JSON.parse(http.responseText)
-                        /* 
-                        jooble.jobs[i].title for job title
-                        jooble.jobs[i].company for company
-                        jooble.jobs[i].location for city and state
-                        jooble.jobs[i].salary for salary, may be displayed as yearly salary or as range of pay per hour, ex. $14.94 - $19.06 per hour
-                        jooble.jobs[i].link for a link for the job listing
-                        jooble.jobs[i].type for whether it is full time, part time, etc.
-                        */
-    
-    
-    
-                        jooble.jobs.forEach(element => {
-                             if ((element.company !== undefined) && (element.salary !== undefined) && (element.title !== undefined)){   
-                                businessNameArray.push(element.company);
-                                salaryResultArray.push(element.salary);
-                                titleResultArray.push(element.title);
-                             }
-                        });
-    
-    
-                    } // put new code that uses stuff from jooble under this line
-                    results = {
-                        businessNameArray,
-                        salaryResultArray,
-                        titleResultArray
-                    }
-                    // passData(results);
-    
-                    results.businessNameArray.forEach(element => {
-                        fullSearchName = element + " " + city + " " + state;
-                        //console.log(fullSearchName);
-    
-                        setTimeout(GoogleSearchAPI(fullSearchName), 3000);
-                        
-                    });
-    
-                    results = {
-                        businessNameArray,
-                        salaryResultArray,
-                        titleResultArray,
-                        lat,
-                        long,
-                        hasLocation
-                    }
-    
-                    setTimeout(function(){console.log(results);}, 6000);
-    
-    
-    
-                } // no new code below this line that uses stuff from jooble
-                //Send request to the server
-                http.send(params);
+                else {
+                    lat.push(0);
+                    long.push(0);
+                    hasLocation.push(false);
+                }
+
+                // console.log(lat);
             });
-        </script>
+        }
+
+
+
+
+        // Jooble API
+        $(".cmdSubmit").on("click", function () {
+
+            businessNameArray = [];
+            salaryResultArray = [];
+            titleResultArray = [];
+            lat = [];
+            long = [];
+            hasLocation = [];
+
+            var url = "https://us.jooble.org/api/";
+            var key = "1f9dc219-e82b-4695-a77e-4ee767540739";
+            city = $("#address-line1").val();
+            state = $("#state").val();
+            console.log(city + " " + state);
+            // put search parameters in here, page 1 limits response to 20 items, radius must be set to 0 to get results only for city set in location
+            // WARNINGS: radius 0 can severly limit the number of results and location must be entered as a city, then state seperated by a comma, and salary should be entered as yearly salary with no $
+            var params = "{ keywords: 'front end developer', location: '" + city + " , " + state + "' , page: '1', salary: '20000', radius: '0'}"
+            var test;
+
+
+            //create xmlHttpRequest object
+            var http = new XMLHttpRequest();
+            //open connection. true - asynchronous, false - synchronous
+            http.open("POST", url + key, true);
+
+            //Send the proper header information
+            http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            //Callback when the state changes
+            http.onreadystatechange = function () {
+                // Any use of the requested object called jooble must be done in this if statement.
+                if (http.readyState == 4 && http.status == 200) {
+                    jooble = JSON.parse(http.responseText)
+                    /* 
+                    jooble.jobs[i].title for job title
+                    jooble.jobs[i].company for company
+                    jooble.jobs[i].location for city and state
+                    jooble.jobs[i].salary for salary, may be displayed as yearly salary or as range of pay per hour, ex. $14.94 - $19.06 per hour
+                    jooble.jobs[i].link for a link for the job listing
+                    jooble.jobs[i].type for whether it is full time, part time, etc.
+                    */
+
+
+
+                    jooble.jobs.forEach(element => {
+                        if ((element.company !== undefined) && (element.salary !== undefined) && (element.title !== undefined)) {
+                            businessNameArray.push(element.company);
+                            salaryResultArray.push(element.salary);
+                            titleResultArray.push(element.title);
+                        }
+                    });
+
+
+                } // put new code that uses stuff from jooble under this line
+                results = {
+                    businessNameArray,
+                    salaryResultArray,
+                    titleResultArray
+                }
+                // passData(results);
+
+                results.businessNameArray.forEach(element => {
+                    fullSearchName = element + " " + city + " " + state;
+                    //console.log(fullSearchName);
+
+                    setTimeout(GoogleSearchAPI(fullSearchName), 3000);
+
+                });
+
+                results = {
+                    businessNameArray,
+                    salaryResultArray,
+                    titleResultArray,
+                    lat,
+                    long,
+                    hasLocation
+                }
+
+                setTimeout(function () { console.log(results); }, 6000);
+
+
+
+            } // no new code below this line that uses stuff from jooble
+            //Send request to the server
+            http.send(params);
+        });
+    </script>
+
 </body>
 
 </html>
