@@ -188,50 +188,52 @@
         var uluru = { lat: 34.024212, lng: -118.496475 };
         var uluru2 = { lat: 34.0522222, lng: -118.2427778 };
         function initMap() {
-            // The location of Uluru
+        // The location of Uluru
 
-            // The map, centered at Uluru
-            var map = new google.maps.Map(
-                document.getElementById('map'), {
-                    zoom: 12,
-                    zoomControl: true,
-                    mapTypeControl: true,
-                    mapTypeControlOptions: {
-                        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                        //terrain button is not working
-                        mapTypeIds: ['roadmap', 'terrain']
-
-                    },
-                    streetViewControl: true,
-                    rotateControl: true,
-                    center: uluru,
-                    disableDefaultUI: false,
-                });
-            // The marker, positioned at Uluru
-            //This is the way you can have markers show in the correct place on the map
-            var marker = new google.maps.Marker({ position: uluru, map: map });
-            var marker2 = new google.maps.Marker({ position: uluru2, map: map });
-            var markers = [];
-            var infoWindows = [];
-
-            $(".cmdSubmit").on("click", function () {
-
-                setTimeout(function () {
-                    markers = [];
-                    for (var i = 0; i < results.hasLocation.length; i++) {
-                        if (results.hasLocation[i] === true) {
-                            var myLatLong = { lat: results.lat[i], lng: results.long[i] };
-                            markers.push(new google.maps.Marker({ position: myLatLong, map: map, title: results.businessNameArray[i] }));
-                            infoWindows.push(new google.maps.InfoWindow({ content: results.salaryResultArray[i] + " " + results.titleResultArray[i] }));
-                            markers[i].addListener("click", function () {
-                                infoWindows[i].open(map, marker[i]);
-                            });
-                        }
-                    }
-                    console.log(markers);
-                }, 7000);
-
+        // The map, centered at Uluru
+        var map = new google.maps.Map(
+            document.getElementById('map'), {
+                zoom: 12,
+                zoomControl: true,
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                    //terrain button is not working
+                    mapTypeIds: ['roadmap', 'terrain']
+                    
+                },
+                streetViewControl: true,
+                rotateControl: true,
+                center: uluru,
+                disableDefaultUI: false,
             });
+        // The marker, positioned at Uluru
+        //This is the way you can have markers show in the correct place on the map
+        var marker = new google.maps.Marker({ position: uluru, map: map });
+        var marker2 = new google.maps.Marker({ position: uluru2, map: map });
+        var markers = [];
+        var infoWindows = [];
+
+        $(".cmdSubmit").on("click", function () {
+
+            setTimeout(function(){
+                markers = [];
+                for (var i = 0; i < results.hasLocation.length; i++) {
+                    if (results.hasLocation[i] === true) {
+                        var myLatLong = {lat: results.lat[i], lng : results.long[i]};
+                        markers.push(new google.maps.Marker({ position: myLatLong, map: map , title: results.businessNameArray[i]}));
+                        infoWindows.push(new google.maps.InfoWindow({content: results.salaryResultArray[i] + " " + results.titleResultArray[i]}));
+                        markers[i].addListener("click", function() {
+                            console.log(this);
+                            infoWindows[i].open(map, this);
+                        });
+                    }
+                }
+                console.log(markers);
+                console.log(infoWindows);
+            }, 20000);
+
+        });
 
         }
         var city;
@@ -250,7 +252,6 @@
         var hasLocation = [];
         var results = {};
 
-
         var passData = function (data) {
             if (data.businessNameArray.length > 0) {
                 console.log(data);
@@ -268,23 +269,22 @@
 
             $.ajax({
                 method: "GET",
-                url: mapsUrl
-            }).then(function (response) {
-                if (response.status === "OK") {
+                url : mapsUrl
+            }).then(function(response){
+                if (response.status === "OK"){
                     lat.push(response.candidates[0].geometry.location.lat);
                     long.push(response.candidates[0].geometry.location.lng);
                     hasLocation.push(true);
-                }
+                    }
                 else {
                     lat.push(0);
                     long.push(0);
                     hasLocation.push(false);
-                }
+                    }
 
                 // console.log(lat);
             });
         }
-
 
 
 
@@ -333,11 +333,11 @@
 
 
                     jooble.jobs.forEach(element => {
-                        if ((element.company !== undefined) && (element.salary !== undefined) && (element.title !== undefined)) {
+                         if ((element.company !== undefined) && (element.salary !== undefined) && (element.title !== undefined)){   
                             businessNameArray.push(element.company);
                             salaryResultArray.push(element.salary);
                             titleResultArray.push(element.title);
-                        }
+                         }
                     });
 
 
@@ -354,7 +354,6 @@
                     //console.log(fullSearchName);
 
                     setTimeout(GoogleSearchAPI(fullSearchName), 3000);
-
                 });
 
                 results = {
@@ -366,7 +365,7 @@
                     hasLocation
                 }
 
-                setTimeout(function () { console.log(results); }, 6000);
+                setTimeout(function(){console.log(results);}, 6000);
 
 
 
