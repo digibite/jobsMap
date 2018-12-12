@@ -222,7 +222,6 @@
         // The marker, positioned at Uluru
         //This is the way you can have markers show in the correct place on the map
         marker = new google.maps.Marker({ position: uluru, map: map });
-        console.log(marker);
         // var marker2 = new google.maps.Marker({ position: uluru2, map: map });
         var markers = [];
         var infoWindows = [];
@@ -245,52 +244,65 @@
         var long;
         var placeName;
         var fullSearchName = [];
-        var hasLocation = [];
+        var hasLocation;
         var results = {};
         var markers = [];
-        var infoWindows = [];
+        var infoWindow;
         var searchNumber = 0;
+        var loopCount = 0;
 
         // Google Maps Search API function
         // place name needs to include city and state
         // this adds the searched locations lat and long to coresponding arrays
 
         function GoogleSearchAPI(placeName , index) {
-
             placeNameNew = placeName.replace(" ", "%20");
 
-            var mapsUrl = "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/findplacefromtext/json?&key=AIzaSyCQHurErpXDh3Y89jvtzzv_O_3tYyoeptI&fields=formatted_address,name,geometry&inputtype=textquery&input=" + placeNameNew;
+            var mapsUrl = "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/findplacefromtext/json?&key=AIzaSyBeDNnZ-EsobJR06YiWcl_bqRA_OJ1Ofd4&fields=formatted_address,name,geometry&inputtype=textquery&input=" + placeNameNew;
 
             $.ajax({
                 method: "GET",
                 url : mapsUrl
             }).then(function(response){
-                // console.log(response);
                 if (response.status === "OK"){
                     lat = (response.candidates[0].geometry.location.lat);
                     lng = (response.candidates[0].geometry.location.lng);
-                    var myLatLong = {lat, lng};
-                    // console.log(myLatLong);
-                    hasLocation.push(true);
-                    // console.log(map);
+                    var position = {lat, lng};
+                    hasLocation = true;
                     // if ()
                     // markers[index].setMap(null);
+                    map = new google.maps.Map(
+                        document.getElementById('map'), {
+                            zoom: 12,
+                            zoomControl: true,
+                            mapTypeControl: true,
+                            mapTypeControlOptions: {
+                                style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                                //terrain button is not working
+                                mapTypeIds: ['roadmap', 'terrain', 'satellite']
 
-                    marker = new google.maps.Marker({ position: myLatLong, map: map , title: results.businessNameArray[index], number: index});
-                    // console.log(markers);
-                    infoWindows = new google.maps.InfoWindow({content: results.businessNameArray[index] + " " + results.salaryResultArray[index] + " " + results.titleResultArray[index]});
+                            },
+                            streetViewControl: true,
+                            rotateControl: true,
+                            center: position,
+                            disableDefaultUI: false,
+                    });
+                    marker = new google.maps.Marker({ position, map , title: results.businessNameArray[index], number: index});
+                    infoWindow = new google.maps.InfoWindow({content: results.businessNameArray[index] + " " + results.salaryResultArray[index] + " " + results.titleResultArray[index]});
                     marker.addListener("click", function() {
-                        console.log(this);
-                        infoWindows.open(map, marker);
+                        infoWindow.open(map, marker);
                     });
                 }
                 else {
-                    // lat.push(0);
-                    // long.push(0);
-                    hasLocation.push(false);
+                    // alert(businessNameArray[index] + "'s location is unavailable at this time. They are offering " + results.salaryResultArray[index] + " for a " + results.titleResultArray[index]);
+                    hasLocation = false;
+                    loopCount++;
+                    if (loopCount <= 10){
+                        GoogleSearchAPI(results.businessNameArray[index+1] + " " + city + " " + state, index+1);
+                    }
                 }
 
-
+                console.log(placeName, hasLocation)
 
             });
         }
@@ -305,22 +317,18 @@
             titleResultArray = [];
             lat = "";
             long = "";
-            hasLocation = [];
+            hasLocation = "";
 
-            
+            fullSearchName = [];
 
             city = $("#address-line1").val();
             state = $("#state").val();
-            console.log(city , state);
-            console.log(marker)
             $.ajax({
                 url: "https://us.jooble.org/api/d27dfc48-4802-4c3a-b5d9-297f7452c95e",
                 method: "POST",
                 data: JSON.stringify({keywords: "front end developer", location: city + "," + state, page: 1, salary: 20000, radius: 0})
                 }).then(function(response){
-                    // console.log(response);
                     // var jooble = JSON.parse(response);
-                    // console.log(jooble);
                     response.jobs.forEach(element => {
                          if ((element.company !== undefined) && (element.salary !== undefined) && (element.title !== undefined)){   
                             businessNameArray.push(element.company);
@@ -337,30 +345,29 @@
                         long,
                         hasLocation
                      }
-
-                    infoWindows = [];
-                    markers = [];
-
+                    infoWindow = "";
 
 
                     for (i=0; i < results.businessNameArray.length; i++) {
 
                         fullSearchName.push(results.businessNameArray[i] + " " + city + " " + state);
-                        // console.log(fullSearchName);
 
                     }
-
-                    console.log(marker);
                     marker.setMap(null);
+                    // setMapOnAll(null);
                     marker = "";
                     searchNumber = 0;
                     GoogleSearchAPI(fullSearchName[searchNumber] , searchNumber);
+
+
 
                     $(".nextButton").on("click", function(){
                         if (searchNumber < fullSearchName.length - 1){
                             searchNumber++;
                             marker.setMap(null);
                             GoogleSearchAPI(fullSearchName[searchNumber] , searchNumber);
+
+                            
                         }
                     });
 
@@ -369,11 +376,10 @@
                             searchNumber--;
                             marker.setMap(null);
                             GoogleSearchAPI(fullSearchName[searchNumber], searchNumber);
+
                         }
                     });
 
-                    console.log(infoWindows);
-                    console.log(markers);
 
                     results = {
                         businessNameArray,
@@ -384,7 +390,6 @@
                         hasLocation
                     }
 
-                    console.log(results);
 
                     markers = [];
 
