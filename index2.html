@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- jquery script -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h"
+        crossorigin="anonymous">
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <!-- jquery script ends -->
+
+    <!-- bootstrap script starts -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <!-- bootstrap script ends -->
+
+    <style>
+        /* Set the size of the div element that contains the map */
+        body {
+            /* background-color: grey; */
+            background-image: url("assets/images/background.jpeg");
+
+        }
+        #map {
+            margin-top:10px;
+            height: 650px;
+            /* The height is 400 pixels */
+            width: 100%;
+            /* The width is the width of the web page */
+            /* overflow: show; */
+        }
+        h1 {
+            text-align: center;
+        }
+        .navbar {
+        padding-left: 100px;
+        padding-right: 100px;
+        }
+        .container {
+            position: absolute;
+            width: 220px;
+            z-index:99999;
+            padding: 0rem 0rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            right: 40%;
+        }
+        
+        .control-group {
+            text-align: center;
+        }
+
+        .container2 {
+            position: relative;
+            margin: 0px 100px 0px 100px;
+            -moz-box-shadow:    10px 3px 12px 2px rgb(17, 16, 16);
+            -webkit-box-shadow: 10px 3px 12px 2px rgb(17, 16, 16);
+            box-shadow: 10px 3px 12px 2px rgb(17, 16, 16);
+        }
+
+        #address-line1 {
+            box-shadow: 3px 4px 2px 1px rgb(17, 16, 16); 
+            
+        }
+        .dropdown-menu {
+            height: 200px;
+            overflow: auto;
+        }
+
+        /* #state {
+            box-shadow: 3px 4px 2px 1px rgb(17, 16, 16);
+        } */
+        /* .cmdSubmit {
+            box-shadow: 3px 4px 2px 1px rgb(17, 16, 16);
+            margin-left: 15px;
+        } */
+
+        
+
+  
+
+  /* .fifth::after {
+      width: 110%;
+    } */
+    </style>
+
+    <title>Document</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">100+&nbsp;&nbsp;</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <!-- <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li> -->
+                <li class="nav-item">
+
+                    <input class="form-control mr-sm-2" type="search" id="city-input" placeholder="Santa Monica"
+                        aria-label="Search">
+
+                    <!-- <a class="nav-link" href="#">Link</a> -->
+                </li>
+
+                <div class="control-group">
+                    <!-- <label class="control-label">State / Province / Region</label> -->
+                    <div class="controls">
+                        <select id="state" name="state" class="form-control input-xlarge" required>
+                            <option value="" selected>State</option>
+                            <option value="AL">AL</option>
+                            <option value="AK">AK</option>
+                            <option value="AZ">AZ</option>
+                            <option value="AR">AR</option>
+                            <option value="CA">CA</option>
+                            <option value="CO">CO</option>
+                            <option value="CT">CT</option>
+                            <option value="DC">DC</option>
+                            <option value="DE">DE</option>
+                            <option value="FL">FL</option>
+                            <option value="GA">GA</option>
+                            <option value="HI">HI</option>
+                            <option value="ID">ID</option>
+                            <option value="IL">IL</option>
+                            <option value="IN">IN</option>
+                            <option value="IA">IA</option>
+                            <option value="KS">KS</option>
+                            <option value="KY">KY</option>
+                            <option value="LA">LA</option>
+                            <option value="ME">ME</option>
+                            <option value="MD">MD</option>
+                            <option value="MA">MA</option>
+                            <option value="MI">MI</option>
+                            <option value="MN">MN</option>
+                            <option value="MS">MS</option>
+                            <option value="MO">MO</option>
+                            <option value="MT">MT</option>
+                            <option value="NE">NE</option>
+                            <option value="NV">NV</option>
+                            <option value="NH">NH</option>
+                            <option value="NJ">NJ</option>
+                            <option value="NM">NM</option>
+                            <option value="NY">NY</option>
+                            <option value="NC">NC</option>
+                            <option value="ND">ND</option>
+                            <option value="OH">OH</option>
+                            <option value="OK">OK</option>
+                            <option value="OR">OR</option>
+                            <option value="PA">PA</option>
+                            <option value="RI">RI</option>
+                            <option value="SC">SC</option>
+                            <option value="SD">SD</option>
+                            <option value="TN">TN</option>
+                            <option value="TX">TX</option>
+                            <option value="UT">UT</option>
+                            <option value="VT">VT</option>
+                            <option value="VA">VA</option>
+                            <option value="WA">WA</option>
+                            <option value="WV">WV</option>
+                            <option value="WI">WI</option>
+                            <option value="WY">WY</option>
+                            <option value="">-Terr.-</option>
+                            <option value="AS">AS</option>
+                            <option value="FM">FM</option>
+                            <option value="GU">GU</option>
+                            <option value="MI">MI</option>
+                            <option value="PR">PR</option>
+                            <option value="VI">VI</option>
+                        </select>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+
+                &nbsp;&nbsp;
+                <li class="nav-item">
+                    <button class="btn btn-outline-primary my-2 my-sm-0 cmdSubmit" type="submit">Search</button>
+                    <!-- <a class="nav-link disabled" href="#">Disabled</a> -->
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+
+                <a class="nav-link disabled nav-item" href="#">Contact Us</a>
+
+                <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"> -->
+                <!-- <button class="btn btn-outline-success my-2 my-sm-0 cmdSubmit" type="submit">Search</button> -->
+            </form>
+        </div>
+    </nav>
+
+
+
+
+    <div class="container2">
+        <div class="container control-group col-xl-12 col-lg-12 col-md-12 col-sm-12">
+
+        </div>
+
+
+        <div id="map" style="overflow: visible !important;"></div>
+
+    </div>
+
+    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQHurErpXDh3Y89jvtzzv_O_3tYyoeptI&callback=initMap"
+        type="text/javascript"></script> -->
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQHurErpXDh3Y89jvtzzv_O_3tYyoeptI&callback=initMap"
+        type="text/javascript"></script>
+
+    <script>
+        // Initialize and add the map   34.024212, -118.496475
+        var uluru = { lat: 34.024212, lng: -118.496475 };
+        var uluru2 = { lat: 34.0522222, lng: -118.2427778 };
+        var map;
+        var marker;
+        var joobleArr = [];
+        var city;
+        var state;
+        var search;
+        var businessNameArray = [];
+        var salaryInput;
+        var salaryResultArray = [];
+        var titleInput;
+        var titleResultArray = [];
+        // var joobleArray = [];
+        var lat;
+        var long;
+        var placeName;
+        var fullSearchName = [];
+        var hasLocation = [];
+        var results = {};
+        var markers = [];
+        var infoWindows = [];
+        var searchNumber = 0;
+        var location;
+        var pos;
+        function getLocation() {
+            if (navigator.geolocation) {
+                location = navigator.geolocation.getCurrentPosition(showPosition);
+                console.log(location);
+            } else {
+                alert("Geolocation is not supported by browser");
+            }
+        }
+
+        function showPosition(position) {
+            lat = position.coords.latidude;
+            lng = position.coords.longtide;
+            map.setCenter(new google.maps.LatLng(lat, lng));
+        }
+        function initMap() {
+            // The location of Uluru
+
+            //pos = showPosition();
+            //console.log(pos) 
+            // The map, centered at Uluru
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: -34.397, lng: 150.644 },
+                zoom: 14
+            });
+            infoWindow = new google.maps.InfoWindow;
+
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent('Location found.');
+                    infoWindow.open(map);
+                    map.setCenter(pos);
+                }, function () {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+
+
+
+
+
+
+            // map = new google.maps.Map(
+            //     document.getElementById('map'), {
+            //         zoom: 12,
+            //         zoomControl: true,
+            //         mapTypeControl: true,
+            //         mapTypeControlOptions: {
+            //             style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+            //             //terrain button is not working
+            //             mapTypeIds: ['roadmap', 'terrain', 'satellite']
+            //         },
+            //         streetViewControl: true,
+            //         rotateControl: true,
+            //         center: uluru,
+            //         disableDefaultUI: false,
+            //     });
+
+
+            // The marker, positioned at Uluru
+            //This is the way you can have markers show in the correct place on the map
+            // marker = new google.maps.Marker({ position: uluru, map: map });
+            //console.log(marker);
+            // var marker2 = new google.maps.Marker({ position: uluru2, map: map });
+            var markers = [];
+            var infoWindows = [];
+
+            // function showInfo() {
+
+            // }
+
+        }
+        console.log(map);
+
+
+        // Google Maps Search API function
+        // place name needs to include city and state
+        // this adds the searched locations lat and long to coresponding arrays
+
+        // function GoogleSearchAPI(placeName , index) {
+
+
+
+
+
+
+
+
+        // Jooble API
+        $(".cmdSubmit").on("click", function () {
+
+            businessNameArray = [];
+            salaryResultArray = [];
+            titleResultArray = [];
+            lat = "";
+            long = "";
+            hasLocation = [];
+
+            // var url = "https://us.jooble.org/api/";
+            // var key = "1f9dc219-e82b-4695-a77e-4ee767540739";
+
+            // console.log(city + " " + state);
+            // // put search parameters in here, page 1 limits response to 20 items, radius must be set to 0 to get results only for city set in location
+            // // WARNINGS: radius 0 can severly limit the number of results and location must be entered as a city, then state seperated by a comma, and salary should be entered as yearly salary with no $
+            // var params = "{ keywords: 'front end developer', location: '" + city + " , " + state + "' , page: '1', salary: '20000', radius: '0'}"
+            // var test;
+
+
+
+
+            //     // passData(results);
+
+            //     results.businessNameArray.forEach(element => {
+            //         fullSearchName = element + " " + city + " " + state;
+            //         //console.log(fullSearchName);
+
+            //         setTimeout(GoogleSearchAPI(fullSearchName), 3000);
+            //     });
+
+
+
+            //     setTimeout(function(){console.log(results);}, 6000);
+
+
+
+            // } // no new code below this line that uses stuff from jooble
+            // //Send request to the server
+            // http.send(params);
+
+            city = $("#city-input").val();
+            state = $("#state").val();
+            console.log(city, state);
+            //console.log(marker)
+            $.ajax({
+                url: "https://us.jooble.org/api/d27dfc48-4802-4c3a-b5d9-297f7452c95e",
+                method: "POST",
+                data: JSON.stringify({ keywords: "developer", location: city + "," + state, page: 1, salary: 90000, radius: 0 })
+            }).then(function (response) {
+                console.log(response)
+                for (var i = 0; i < response.jobs.length; i++) {
+                    if ((response.jobs[i].company !== undefined) && (response.jobs[i].salary !== undefined) && (response.jobs[i].title !== undefined) && (response.jobs[i].location !== undefined)) {
+                        joobleArr.push(response.jobs[i]);
+                    }
+                }
+                placeName = city + name;
+                placeNameNew = placeName.replace(" ", "+");
+
+                var mapsUrl = "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/findplacefromtext/json?&key=AIzaSyCQHurErpXDh3Y89jvtzzv_O_3tYyoeptI&fields=formatted_address,name,geometry&inputtype=textquery&input=" + placeNameNew;
+
+                $.ajax({
+                    method: "GET",
+                    url: mapsUrl
+                }).then(function (response) {
+                    // console.log(response);
+                    if (response.status === "OK") {
+                        uluru2 = response.candidates[0].geometry.location;
+
+                        map = new google.maps.Map(
+                            document.getElementById('map'), {
+                                zoom: 12,
+                                zoomControl: true,
+                                mapTypeControl: true,
+                                mapTypeControlOptions: {
+                                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                                    //terrain button is not working
+                                    mapTypeIds: ['roadmap', 'terrain', 'satellite']
+
+                                },
+                                streetViewControl: true,
+                                rotateControl: true,
+                                center: uluru2,
+                                disableDefaultUI: false,
+                            });
+                        // The marker, positioned at Uluru
+                        //This is the way you can have markers show in the correct place on the map
+                        marker = new google.maps.Marker({ position: uluru2, map: map });
+
+                        // lat = (response.candidates[0].geometry.location.lat);
+                        // lng = (response.candidates[0].geometry.location.lng);
+                        // var myLatLong = { lat, lng };
+                        // // console.log(myLatLong);
+                        // hasLocation.push(true);
+                        // // console.log(map);
+                        // // if ()
+                        // // markers[index].setMap(null);
+
+                        // marker = new google.maps.Marker({ position: myLatLong, map: map, title: results.businessNameArray[index], number: index });
+                        // // console.log(markers);
+                        // infoWindows = new google.maps.InfoWindow({ content: results.businessNameArray[index] + " " + results.salaryResultArray[index] + " " + results.titleResultArray[index] });
+                        // marker.addListener("click", function () {
+                        //     console.log(this);
+                        //     infoWindows.open(map, marker);
+                        // });
+                    }
+                    else {
+                        // lat.push(0);
+                        // long.push(0);
+                        // hasLocation.push(false);
+                    }
+                });
+
+
+                // console.log(marker);
+                // var marker2 = new google.maps.Marker({ position: uluru2, map: map });
+                // var markers = [];
+                // var infoWindows = [];
+
+            })
+        })
+
+
+
+                    // var jooble = JSON.parse(response);
+                    // console.log(jooble);
+
+
+                    // results = {
+                    //     businessNameArray,
+                    //     salaryResultArray,
+                    //     titleResultArray,
+                    //     lat,
+                    //     long,
+                    //     hasLocation
+                    //  }
+
+                    // infoWindows = [];
+                    // markers = [];
+
+
+
+        //             for (i=0; i < results.businessNameArray.length; i++) {
+
+        //                 fullSearchName.push(results.businessNameArray[i] + " " + city + " " + state);
+        //                 // console.log(fullSearchName);
+
+        //             }
+
+        //             console.log(marker);
+        //             marker.setMap(null);
+        //             marker = "";
+        //             searchNumber = 0;
+        //             GoogleSearchAPI(fullSearchName[searchNumber] , searchNumber);
+
+        //             $(".nextButton").on("click", function(){
+        //                 if (searchNumber < fullSearchName.length - 1){
+        //                     searchNumber++;
+        //                     marker.setMap(null);
+        //                     GoogleSearchAPI(fullSearchName[searchNumber] , searchNumber);
+        //                 }
+        //             });
+
+        //             $(".prevButton").on("click", function(){
+        //                 if (searchNumber > 0){
+        //                     searchNumber--;
+        //                     marker.setMap(null);
+        //                     GoogleSearchAPI(fullSearchName[searchNumber], searchNumber);
+        //                 }
+        //             });
+
+        //             console.log(infoWindows);
+        //             console.log(markers);
+
+        //             results = {
+        //                 businessNameArray,
+        //                 salaryResultArray,
+        //                 titleResultArray,
+        //                 lat,
+        //                 long,
+        //                 hasLocation
+        //             }
+
+        //             console.log(results);
+
+        //             markers = [];
+
+        //             // console.log(markers);
+        //             // console.log(infoWindows);
+
+
+        //         })
+
+        // });
+
+    </script>
+
+</body>
+
+</html>
+
+
+
+<!-- map = new google.maps.Map(
+                document.getElementById('map'), {
+                    zoom: 12,
+                    zoomControl: true,
+                    mapTypeControl: true,
+                    mapTypeControlOptions: {
+                        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                        //terrain button is not working
+                        mapTypeIds: ['roadmap', 'terrain', 'satellite']
+
+                    },
+                    streetViewControl: true,
+                    rotateControl: true,
+                    center: uluru2,
+                    disableDefaultUI: false,
+                });
+            // The marker, positioned at Uluru
+            //This is the way you can have markers show in the correct place on the map
+            marker = new google.maps.Marker({ position: uluru2, map: map }); -->
