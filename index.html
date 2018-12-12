@@ -92,6 +92,10 @@
                             <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                         </li> -->
                         <li class="nav-item">
+                                <input id="searchLine" class="form-control mr-sm-2" type="search" placeholder="Front End Developer" aria-label="Search">
+                                <!-- <a class="nav-link" href="#">Link</a> -->
+                        </li>
+                        <li class="nav-item">
                             <input id="address-line1" class="form-control mr-sm-2" type="search" placeholder="Santa Monica" aria-label="Search">
                             <!-- <a class="nav-link" href="#">Link</a> -->
                         </li>
@@ -300,17 +304,25 @@
                     if (loopCount <= 10){
                         GoogleSearchAPI(results.businessNameArray[index+1] + " " + city + " " + state, index+1);
                     }
+                    else {
+                        alert("No results found");
+                    }
                 }
+
+                $(".nextButton").prop("disabled", false);
+
 
                 console.log(placeName, hasLocation)
 
             });
         }
 
-
+        $(".nextButton").prop("disabled", true);
+        $(".prevButton").prop("disabled", true);
 
         // Jooble API
         $(".cmdSubmit").on("click", function () {
+
 
             businessNameArray = [];
             salaryResultArray = [];
@@ -323,12 +335,18 @@
 
             city = $("#address-line1").val();
             state = $("#state").val();
+            search = $("#searchLine").val();
             $.ajax({
                 url: "https://us.jooble.org/api/d27dfc48-4802-4c3a-b5d9-297f7452c95e",
                 method: "POST",
-                data: JSON.stringify({keywords: "front end developer", location: city + "," + state, page: 1, salary: 20000, radius: 0})
+                data: JSON.stringify({keywords: search, location: city + "," + state, page: 1, salary: 20000, radius: 0})
                 }).then(function(response){
                     // var jooble = JSON.parse(response);
+                    console.log(response);
+                    if (response.totalCount === 0){
+                        alert("No results found");
+                    }
+                    else{
                     response.jobs.forEach(element => {
                          if ((element.company !== undefined) && (element.salary !== undefined) && (element.title !== undefined)){   
                             businessNameArray.push(element.company);
@@ -366,8 +384,11 @@
                             searchNumber++;
                             marker.setMap(null);
                             GoogleSearchAPI(fullSearchName[searchNumber] , searchNumber);
-
-                            
+                            $(".nextButton").prop("disabled", false);
+                            $(".prevButton").prop("disabled", false);
+                        }
+                        else {
+                            $(".nextButton").prop("disabled", true);
                         }
                     });
 
@@ -376,7 +397,11 @@
                             searchNumber--;
                             marker.setMap(null);
                             GoogleSearchAPI(fullSearchName[searchNumber], searchNumber);
-
+                            $(".prevButton").prop("disabled", false);
+                            $(".nextButton").prop("disabled", false);
+                        }
+                        else{
+                            $(".prevButton").prop("disabled", true);
                         }
                     });
 
@@ -392,7 +417,7 @@
 
 
                     markers = [];
-
+                    }
                 })
             
         });
