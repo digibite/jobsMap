@@ -6,11 +6,10 @@
     <meta name="viewport">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/contact.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
-        crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
@@ -29,40 +28,44 @@
     <div id="main-container" class="contact-container">
         <div class="wrapper">
             <section class="main-section #e0e0e0 grey lighten-2">
-                <h1 class="center-align black-text">Contact Us</h1>
+                <h2 class="center-align black-text">Contact Us</h2>
                 <p id="P" class="center-align blue-text">Got a question? We'd love to hear from you. Send us a message
                     and we'll respond as soon as posibble.</p>
                 <br>
                 <form>
                     <div class="row">
-                        <div class="col s12">
-                            <label class="black-text" id="input" for="inputName">Name:</label>
-                            <input type="name" class="form-control center-align" id="inputName" placeholder="John Smith">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">account_circle</i>
+                            <input id="icon_prefix" type="text" class="validate">
+                            <label for="icon_prefix">NAME:</label>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col s12">
-                            <label class="black-text" id="input" for="input-email">Email:</label>
-                            <input type="mail" class="form-control center-align" id="input-email" placeholder="example@gmail.com">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">email</i>
+                            <input id="icon_prefix" type="text" class="validate">
+                            <label for="icon_prefix">EMAIL:</label>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col s12">
-                            <label class="black-text" id="input" for="inputMessage">Message:</label>
-                            <textarea type="message" class="form-control center-align" id="inputMessage" placeholder="Write Something..."></textarea>
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">mode_edit</i>
+                            <textarea id="icon_prefix2" class="materialize-textarea"></textarea>
+                            <label for="icon_prefix2">WRITE SOMETHING...</label>
                         </div>
                     </div>
                     </br>
                     <div class="row">
                         <div class="col s12 center-align">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                                <i class="material-icons right">send</i>
+                            </button>
                         </div>
                     </div>
                 </form>
             </section>
         </div>
     </div>
-
     <footer>
         <div class="container3 center-align">
             Copyright &copy;
@@ -70,4 +73,3 @@
     </footer>
 </body>
 
-</html>
