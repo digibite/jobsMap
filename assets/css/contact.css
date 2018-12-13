@@ -14,18 +14,32 @@
 
 /* home tab */
  #home {
-   margin-left: 75px;
+   margin-left: 55px;
    font-size: 20px;
  }
- 
+
+ /* app logo */
+ #Applogo {
+   font-weight: bolder;
+   font-size: 40px;
+ }
+
+/* contact us*/
+#contact {
+   font-weight: bold;
+   margin-top: 45px;
+   
+}
 /* paragraph */
  #P {
    font-size: medium;
    font-weight: bold;
+   color: darkslategrey;
  }
 
+/* main body container */
  #main-container {
-   padding-top: 25px;
+   padding-top: 35px;
    min-height: calc(100vh - 70px);
   
  }
@@ -83,7 +97,7 @@
  /* Width at 640px and below */
  @media screen and (max-width: 640px){  
  .container {
-   max-width: 380px;
+   max-width: 400px;
  
  }
  .main-section {
