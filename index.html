@@ -339,6 +339,7 @@
           method: "GET",
           url: mapsUrl
         }).then(function(response) {
+          console.log(response);
           $("#loading").css("visibility", "hidden");
 
           if (response.status === "OK") {
