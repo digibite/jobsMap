@@ -419,7 +419,7 @@
         state = $("#state").val();
         search = $("#searchLine").val();
         $.ajax({
-          url: "https://us.jooble.org/api/d27dfc48-4802-4c3a-b5d9-297f7452c95e",
+          url: "https://cors-anywhere.herokuapp.com/https://us.jooble.org/api/d27dfc48-4802-4c3a-b5d9-297f7452c95e",
           method: "POST",
           data: JSON.stringify({
             keywords: search,
